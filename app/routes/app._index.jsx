@@ -1,5 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Page, Card, DataTable, Button } from '@shopify/polaris';
+import { useLoaderData } from '@remix-run/react';
+import { json } from '@remix-run/react';
+import shopify from '../shopify.server';
+import GenerateWaybill from './app.generateWaybill';
+
+export async function loader({ request }) {
+  const { admin, session } = await shopify.authenticate.admin(request);
+  const data = await admin.rest.resources.Order.all({ session: session, status: "any" });
+  return json(data.data);
+}
 
 // Helper function to format the order date
 const formatOrderDate = (date) => {
@@ -14,7 +24,7 @@ const formatTotalPrice = (amount, currencyCode) => {
 };
 
 // Function to format the order data
-const formatOrderData = (order) => {
+const formatOrderData = (order, handleWaybillClick) => {
   return [
     order.order_number || 'N/A',
     formatOrderDate(order.created_at),
@@ -24,20 +34,21 @@ const formatOrderData = (order) => {
     `${order.line_items.length} items`,
     'Unfulfilled', // Placeholder, adjust as necessary
     'Shipping', // Placeholder, adjust as necessary
-    <Button onClick={() => handleShippingPrint(order.order_number)}>Shipping Print</Button>
+    <Button onClick={() => handleWaybillClick(order)}>Shipping Print</Button>
   ];
-};
-
-// Function to handle "Shipping Print" button click
-const handleShippingPrint = (orderId) => {
-  console.log(`Print shipping details for order #${orderId}`);
 };
 
 export default function Index() {
   const orders = useLoaderData();
+  const [selectedOrder, setSelectedOrder] = useState(null);
+
+  // Handle waybill generation click
+  const handleWaybillClick = (order) => {
+    setSelectedOrder(order);
+  };
 
   // Format rows for the DataTable
-  const rows = orders.map(order => formatOrderData(order));
+  const rows = orders.map(order => formatOrderData(order, handleWaybillClick));
 
   return (
     <Page title="Orders">
@@ -68,6 +79,12 @@ export default function Index() {
           rows={rows}
         />
       </Card>
+      {selectedOrder && (
+        <GenerateWaybill
+          order={selectedOrder}
+          onClose={() => setSelectedOrder(null)} // Optionally add a close handler
+        />
+      )}
     </Page>
   );
 }

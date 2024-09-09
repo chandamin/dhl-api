@@ -23,7 +23,7 @@ const MyDocument = ({ barcodeBase64, domesticData, AWBNo }) => {
         <View style={styles.contentWrapper}>
           <View style={styles.header}>
             <View style={styles.logoContainer}>
-              <Image src="./img/logo.png" style={styles.logo} />
+              <Image src="/app/img/logo.png" style={styles.logo} />
             </View>
             <View style={styles.contentContainer}>
               <Text style={styles.orderInfo}>Order No. #{Services.InvoiceNo || 'N/A'}</Text>
