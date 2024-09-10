@@ -32,8 +32,6 @@ const formatOrderData = (order, handleWaybillClick) => {
     formatTotalPrice(order.current_total_price, order.currency),
     order.financial_status || 'N/A',
     `${order.line_items.length} items`,
-    'Unfulfilled', // Placeholder, adjust as necessary
-    'Shipping', // Placeholder, adjust as necessary
     <Button onClick={() => handleWaybillClick(order)}>Shipping Print</Button>
   ];
 };
@@ -53,6 +51,12 @@ export default function Index() {
   return (
     <Page title="Orders">
       <Card>
+        {selectedOrder && (
+          <GenerateWaybill
+            order={selectedOrder}
+            onClose={() => setSelectedOrder(null)} // Optionally add a close handler
+          />
+        )}
         <DataTable
           columnContentTypes={[
             'text',   // Order
@@ -61,30 +65,20 @@ export default function Index() {
             'text',   // Total
             'text',   // Payment status
             'text',   // Items
-            'text',   // Delivery status
-            'text',   // Delivery method
             'text'    // Actions (Button)
           ]}
           headings={[
             'Order',
-            'Date',
+            'Date & Time',
             'Customer',
             'Total',
             'Payment Status',
             'Items',
-            'Delivery Status',
-            'Delivery Method',
             'Actions'
           ]}
           rows={rows}
         />
       </Card>
-      {selectedOrder && (
-        <GenerateWaybill
-          order={selectedOrder}
-          onClose={() => setSelectedOrder(null)} // Optionally add a close handler
-        />
-      )}
     </Page>
   );
 }

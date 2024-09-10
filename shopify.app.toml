@@ -1,14 +1,14 @@
 # Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
 
-client_id = "a96653813f308aee3e487ca8f002e9b2"
+client_id = "5c764bacb88ec972c016fac4ca6182bc"
 name = "dhl-api"
-handle = "dhl-api-4"
-application_url = "https://dealers-bent-bits-bernard.trycloudflare.com"
+handle = "dhl-api-5"
+application_url = "https://fred-pit-latin-residence.trycloudflare.com"
 embedded = true
 
 [build]
 automatically_update_urls_on_dev = true
-dev_store_url = "testtakewithfood.myshopify.com"
+dev_store_url = "quickstart-9dd3668a.myshopify.com"
 include_config_on_deploy = true
 
 [access_scopes]
@@ -17,9 +17,9 @@ scopes = "write_draft_orders,write_orders"
 
 [auth]
 redirect_urls = [
-  "https://dealers-bent-bits-bernard.trycloudflare.com/auth/callback",
-  "https://dealers-bent-bits-bernard.trycloudflare.com/auth/shopify/callback",
-  "https://dealers-bent-bits-bernard.trycloudflare.com/api/auth/callback"
+  "https://fred-pit-latin-residence.trycloudflare.com/auth/callback",
+  "https://fred-pit-latin-residence.trycloudflare.com/auth/shopify/callback",
+  "https://fred-pit-latin-residence.trycloudflare.com/api/auth/callback"
 ]
 
 [webhooks]
