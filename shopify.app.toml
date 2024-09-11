@@ -3,7 +3,7 @@
 client_id = "5c764bacb88ec972c016fac4ca6182bc"
 name = "dhl-api"
 handle = "dhl-api-5"
-application_url = "https://fred-pit-latin-residence.trycloudflare.com"
+application_url = "https://exercise-nebraska-hydrogen-submission.trycloudflare.com"
 embedded = true
 
 [build]
@@ -17,9 +17,9 @@ scopes = "write_draft_orders,write_orders"
 
 [auth]
 redirect_urls = [
-  "https://fred-pit-latin-residence.trycloudflare.com/auth/callback",
-  "https://fred-pit-latin-residence.trycloudflare.com/auth/shopify/callback",
-  "https://fred-pit-latin-residence.trycloudflare.com/api/auth/callback"
+  "https://exercise-nebraska-hydrogen-submission.trycloudflare.com/auth/callback",
+  "https://exercise-nebraska-hydrogen-submission.trycloudflare.com/auth/shopify/callback",
+  "https://exercise-nebraska-hydrogen-submission.trycloudflare.com/api/auth/callback"
 ]
 
 [webhooks]

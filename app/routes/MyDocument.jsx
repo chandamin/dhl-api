@@ -44,7 +44,7 @@ const MyDocument = ({ barcodeBase64, domesticData, AWBNo }) => {
           </View>
 
           <View style={styles.barcodeContainer}>
-            <Text style={styles.barcodeText}>{Shipper.OriginArea}</Text>
+            <Text style={styles.barcodeText}>{Shipper.OriginArea}/{Consignee.ConsigneeStateCode}</Text>
             <View style={styles.barcodeImage}>
               <Image src={barcodeBase64} style={styles.barcodeImage} />
               <Text style={styles.barcodeText}>*{AWBNo}*</Text>
@@ -60,7 +60,6 @@ const MyDocument = ({ barcodeBase64, domesticData, AWBNo }) => {
               {/* <Text style={styles.deliveryContent}></Text> */}
               {/* <Text style={styles.deliveryContent}>{Consignee.ConsigneeCityName || 'N/A'}</Text>
               <Text style={styles.deliveryContent}>{Consignee.ConsigneeCountryCode || 'N/A'}</Text> */}
-              <Text style={styles.deliveryContent}>Phone - {Consignee.ConsigneeMobile || 'N/A'}</Text>
             </View>
             <Text style={styles.prepaidRight}>
               {Services.SubProductCode === 'P' ? 'Prepaid' :
@@ -70,6 +69,7 @@ const MyDocument = ({ barcodeBase64, domesticData, AWBNo }) => {
                       Services.SubProductCode === 'B' ? 'Demand Draft on Delivery & Freight on Delivery' :
                         ''}
             </Text>
+            <Text style={styles.prepaidRight}>{Services.DeclaredValue}</Text>
 
           </View>
 
