@@ -1,7 +1,7 @@
 import React from 'react';
 import { Document, Page, Text, View, StyleSheet, Image } from '@react-pdf/renderer';
 
-const MyDocument = ({ barcodeBase64, domesticData, AWBNo }) => {
+const MyDocument = ({ barcodeBase64, domesticData, AWBNo, destinationLocation}) => {
   const Consignee = domesticData.Request.Consignee;
   const Services = domesticData.Request.Services;
   const Shipper = domesticData.Request.Shipper;
@@ -44,10 +44,10 @@ const MyDocument = ({ barcodeBase64, domesticData, AWBNo }) => {
           </View>
 
           <View style={styles.barcodeContainer}>
-            <Text style={styles.barcodeText}>{Shipper.OriginArea}/{Consignee.ConsigneeStateCode}</Text>
+            <Text style={styles.barcodeText}>{Shipper.OriginArea} / {destinationLocation}</Text>
             <View style={styles.barcodeImage}>
               <Image src={barcodeBase64} style={styles.barcodeImage} />
-              <Text style={styles.barcodeText}>*{AWBNo}*</Text>
+              <Text style={[styles.barcodeText, { color: 'red' }]}>*{AWBNo}*</Text>
             </View>
           </View>
 
@@ -69,7 +69,7 @@ const MyDocument = ({ barcodeBase64, domesticData, AWBNo }) => {
                       Services.SubProductCode === 'B' ? 'Demand Draft on Delivery & Freight on Delivery' :
                         ''}
             </Text>
-            <Text style={styles.prepaidRight}>{Services.DeclaredValue}</Text>
+            <Text style={styles.prepaidRight}>{Services.CurrencyCode} {Services.DeclaredValue}</Text>
 
           </View>
 
@@ -96,8 +96,8 @@ const MyDocument = ({ barcodeBase64, domesticData, AWBNo }) => {
 
           <View style={styles.footer}>
             <Text style={styles.fo_text}>If undelivered, please return to:</Text>
-            <Text style={styles.fo_text}>Plot no 1234 Bamnauli, Test RTO Addr2, Test RTO Addr3</Text>
-            <Text style={styles.fo_text}>Phone - 9995554337</Text>
+            <Text style={styles.fo_text}>{Shipper.CustomerAddress1 || 'N/A'},{Shipper.CustomerAddress2 || 'N/A'} - {Shipper.CustomerPincode || 'N/A'}</Text>
+            <Text style={styles.fo_text}>Phone - {Shipper.CustomerMobile || 'N/A'}</Text>
             <Text style={styles.disclaimer}>
               Disclaimer: Blue Dart is not responsible for any kind of cost difference or poor quality.
             </Text>
