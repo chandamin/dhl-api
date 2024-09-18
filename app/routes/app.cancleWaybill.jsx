@@ -1,10 +1,8 @@
 import React, { useState } from "react";
-import { Page, TextField, Button, Banner, Card, Text } from "@shopify/polaris";
+import { Page, TextField, Button, Banner, Card, Text, BlockStack, InlineStack, ButtonGroup } from "@shopify/polaris";
 
 export default function CancleWaybill() {
     const [awbNo, setAwbNo] = useState('');
-    const [licenceKey, setLicenceKey] = useState('');
-    const [loginId, setLoginId] = useState('');
     const [response, setResponse] = useState(null);
     const [jwtToken, setJwtToken] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
@@ -55,9 +53,9 @@ export default function CancleWaybill() {
                 "AWBNo": awbNo
             },
             "Profile": {
-                "Api_type": "S",
-                "LicenceKey": licenceKey,
-                "LoginID": loginId
+                "LoginID": "GG940111",
+                "LicenceKey": "kh7mnhqkmgegoksipxr0urmqesesseup",
+                "Api_type": "S"
             }
         };
 
@@ -97,27 +95,21 @@ export default function CancleWaybill() {
 
     return (
         <Page>
-            <Text variant="headingXl" as="h4">Cancel Waybill</Text>
-            <Card sectioned>
-                <TextField
-                    label="AWB Number"
-                    value={awbNo}
-                    onChange={(value) => setAwbNo(value)}
-                    autoComplete="off"
-                />
-                <TextField
-                    label="Login ID"
-                    value={loginId}
-                    onChange={(value) => setLoginId(value)}
-                    autoComplete="off"
-                />
-                <TextField
-                    label="Licence Key"
-                    value={licenceKey}
-                    onChange={(value) => setLicenceKey(value)}
-                    autoComplete="off"
-                />
-                <Button onClick={handleSubmit}>Submit</Button>
+            <Card roundedAbove="sm">
+                <BlockStack gap="200">
+                <Text variant="headingXl" as="h4">Cancel Waybill</Text>
+                    <TextField label="AWB Number" value={awbNo} onChange={(value) => setAwbNo(value)}
+                        autoComplete="off"
+                        placeholder="Enter Air Way Bill Number to cancel"
+                    />
+                    <InlineStack align="end">
+                        <ButtonGroup>
+                            <Button variant="primary" onClick={handleSubmit}>
+                                SUBMIT
+                            </Button>
+                        </ButtonGroup>
+                    </InlineStack>
+                </BlockStack>
             </Card>
             {errorMessage && (
                 <Banner status="critical">

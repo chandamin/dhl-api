@@ -1,7 +1,24 @@
 import React from 'react';
 import { Document, Page, Text, View, StyleSheet, Image } from '@react-pdf/renderer';
+import { Font } from '@react-pdf/renderer';
+import NotoSans from "./fonts/NotoSans-Italic-VariableFont_wdth,wght.ttf";
 
-const MyDocument = ({ barcodeBase64, domesticData, AWBNo, destinationLocation}) => {
+// Register Font
+Font.register({
+  family: 'Roboto',
+  fonts: [
+    {
+      src: 'https://cdnjs.cloudflare.com/ajax/libs/ink/3.1.10/fonts/Roboto/roboto-regular-webfont.ttf',
+      fontWeight: 400,
+    },
+    {
+      src: 'https://cdnjs.cloudflare.com/ajax/libs/ink/3.1.10/fonts/Roboto/roboto-medium-webfont.ttf',
+      fontWeight: 500,
+    },
+  ],
+});
+
+const MyDocument = ({ barcodeBase64, domesticData, AWBNo, destinationArea, destinationLocation }) => {
   const Consignee = domesticData.Request.Consignee;
   const Services = domesticData.Request.Services;
   const Shipper = domesticData.Request.Shipper;
@@ -13,7 +30,7 @@ const MyDocument = ({ barcodeBase64, domesticData, AWBNo, destinationLocation}) 
 
     // Format the date as needed (example: YYYY-MM-DD)
     const formattedDate = date.toISOString().split('T')[0]; // This will return "YYYY-MM-DD"
-
+    const symbol = '₹';
     return formattedDate;
   };
 
@@ -44,7 +61,7 @@ const MyDocument = ({ barcodeBase64, domesticData, AWBNo, destinationLocation}) 
           </View>
 
           <View style={styles.barcodeContainer}>
-            <Text style={styles.barcodeText}>{Shipper.OriginArea} / {destinationLocation}</Text>
+            <Text style={styles.barcodeText}>{Shipper.OriginArea} / {destinationArea} / {destinationLocation}</Text>
             <View style={styles.barcodeImage}>
               <Image src={barcodeBase64} style={styles.barcodeImage} />
               <Text style={[styles.barcodeText, { color: 'red' }]}>*{AWBNo}*</Text>
@@ -61,16 +78,62 @@ const MyDocument = ({ barcodeBase64, domesticData, AWBNo, destinationLocation}) 
               {/* <Text style={styles.deliveryContent}>{Consignee.ConsigneeCityName || 'N/A'}</Text>
               <Text style={styles.deliveryContent}>{Consignee.ConsigneeCountryCode || 'N/A'}</Text> */}
             </View>
-            <Text style={styles.prepaidRight}>
-              {Services.SubProductCode === 'P' ? 'Prepaid' :
-                Services.SubProductCode === 'D' ? 'Demand Draft on Delivery' :
-                  Services.SubProductCode === 'C' ? 'Cash on Delivery' :
-                    Services.SubProductCode === 'A' ? 'Freight on Delivery' :
-                      Services.SubProductCode === 'B' ? 'Demand Draft on Delivery & Freight on Delivery' :
-                        ''}
-            </Text>
-            <Text style={styles.prepaidRight}>{Services.CurrencyCode} {Services.DeclaredValue}</Text>
+            {(() => {
+              let serviceDisplay;
 
+              switch (Services.SubProductCode) {
+                case 'P':
+                  serviceDisplay = (
+                    <>
+                      <Text style={styles.prepaidRight}>Prepaid</Text>
+                      <Text style={styles.prepaidRight}>Rs. {Services.DeclaredValue}</Text>
+                    </>
+                  );
+                  break;
+                case 'D':
+                  serviceDisplay = (
+                    <>
+                      <Text style={styles.prepaidRight}>DOD</Text>
+                      <Text style={styles.prepaidRight}>Rs. {Services.DeclaredValue}</Text>
+                    </>
+                  );
+                  break;
+                case 'C':
+                  serviceDisplay = (
+                    <>
+                      <Text style={styles.prepaidRight}>COD</Text>
+                      <Text style={styles.prepaidRight}>Rs. {Services.DeclaredValue}</Text>
+                    </>
+                  );
+                  break;
+                case 'A':
+                  serviceDisplay = (
+                    <>
+                      <Text style={styles.prepaidRight}>FOD</Text>
+                      <Text style={styles.prepaidRight}>Rs. {Services.DeclaredValue}</Text>
+                    </>
+                  );
+                  break;
+                case 'B':
+                  serviceDisplay = (
+                    <>
+                      <Text style={styles.prepaidRight}>DOD & FOD</Text>
+                      <Text style={styles.prepaidRight}>Rs. {Services.DeclaredValue}</Text>
+                    </>
+                  );
+                  break;
+                default:
+                  serviceDisplay = (
+                    <>
+                      <Text style={styles.prepaidRight}>Prepaid</Text>
+                      <Text style={styles.prepaidRight}>Rs. {Services.DeclaredValue}</Text>
+                    </>
+                  );
+                  break;
+              }
+
+              return serviceDisplay;
+            })()}
           </View>
 
           <View style={styles.tableContainer}>
@@ -113,7 +176,6 @@ const styles = StyleSheet.create({
   body: {
     padding: 30,
     margin: 0,
-    fontFamily: 'Helvetica',
     position: 'relative',
   },
   contentWrapper: {
@@ -217,75 +279,75 @@ const styles = StyleSheet.create({
     borderLeftColor: '#000',
     borderLeftStyle: 'solid',
   },
-  noborder:{
-  borderLeftWidth: 0,
-},
+  noborder: {
+    borderLeftWidth: 0,
+  },
   tableHeaderTextSerial: {
-  flex: 0.2, // Less width for S.no
-},
+    flex: 0.2, // Less width for S.no
+  },
   tableHeaderTextSku: {
-  flex: 0.5, // Less width for S.no
-},
+    flex: 0.5, // Less width for S.no
+  },
   tableHeaderTextQty: {
-  flex: 0.2, // Less width for Qty
-},
+    flex: 0.2, // Less width for Qty
+  },
   tableHeaderTextDescription: {
-  flex: 2, // More width for Item Description
-},
+    flex: 2, // More width for Item Description
+  },
   tableRow: {
-  flexDirection: 'row',
-  borderBottomWidth: 1,
-  borderBottomColor: '#000',
-  borderBottomStyle: 'solid',
-},
+    flexDirection: 'row',
+    borderBottomWidth: 1,
+    borderBottomColor: '#000',
+    borderBottomStyle: 'solid',
+  },
   tableCell: {
-  flex: 1, // Default flex
-  fontSize: 6,
-  textAlign: 'center',
-  padding: 5,
-  paddingBottom: 14,
-  borderLeftWidth: 1,
-  borderLeftColor: '#000',
-  borderLeftStyle: 'solid',
-  minHeight: 10, // Ensure minimum height
-},
+    flex: 1, // Default flex
+    fontSize: 6,
+    textAlign: 'center',
+    padding: 5,
+    paddingBottom: 14,
+    borderLeftWidth: 1,
+    borderLeftColor: '#000',
+    borderLeftStyle: 'solid',
+    minHeight: 10, // Ensure minimum height
+  },
   tableCellSerial: {
-  flex: 0.2, // Less width for S.no
-},
+    flex: 0.2, // Less width for S.no
+  },
   tableCellSku: {
-  flex: 0.5, // Less width for S.no
-},
+    flex: 0.5, // Less width for S.no
+  },
   tableCellQty: {
-  flex: 0.2, // Less width for Qty
-},
+    flex: 0.2, // Less width for Qty
+  },
   tableCellDescription: {
-  flex: 2, // More width for Item Description
-  textAlign: 'left',
-},
+    flex: 2, // More width for Item Description
+    textAlign: 'left',
+  },
   dimensions: {
-  fontSize: 6,
-  marginTop: 0,
-  textAlign: 'center',
-  paddingTop: 4,
-  paddingBottom: 10,
-},
+    fontSize: 6,
+    marginTop: 0,
+    textAlign: 'center',
+    paddingTop: 4,
+    paddingBottom: 10,
+  },
 
   footer: {
-  fontSize: 10,
-  textAlign: 'center',
-  paddingTop: 8,
-},
+    fontSize: 10,
+    textAlign: 'center',
+    paddingTop: 8,
+  },
   fo_text: {
-  marginBottom: 8,
-  fontSize: 8,
-},
+    marginBottom: 8,
+    fontSize: 8,
+  },
   disclaimer: {
-  marginTop: 0,
-  fontSize: 8,
-  paddingLeft: 5,
-  prepaidRight: 5,
-  paddingBottom: 25,
-},
+    marginTop: 0,
+    fontSize: 8,
+    paddingLeft: 5,
+    prepaidRight: 5,
+    paddingBottom: 25,
+  },
 });
 
 export default MyDocument;

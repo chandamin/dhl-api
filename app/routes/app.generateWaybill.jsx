@@ -155,7 +155,7 @@ export default function GenerateWaybill({ order, onClose }) {
                 "Services": {
                     "AWBNo": "",
                     "ActualWeight": "0.50",
-                    "CollectableAmount": 0,
+                    "CollectableAmount": parseFloat(order.current_subtotal_price_set.presentment_money.amount),
                     "Commodity": {
                         "CommodityDetail1": "5011100014",
                         "CommodityDetail2": "5011100014",
@@ -165,7 +165,7 @@ export default function GenerateWaybill({ order, onClose }) {
                     "CreditReferenceNo2": "",
                     "CreditReferenceNo3": "",
                     "CurrencyCode": order.currency,
-                    "DeclaredValue": parseFloat(order.current_total_price),
+                    "DeclaredValue": parseFloat(order.current_subtotal_price_set.presentment_money.amount),
                     "DeliveryTimeSlot": "",
                     "Dimensions": [
                         {
@@ -203,29 +203,29 @@ export default function GenerateWaybill({ order, onClose }) {
                     "ProductType": 2,
                     "RegisterPickup": true,
                     "SpecialInstruction": "",
-                    "SubProductCode": "",
+                    "SubProductCode": "P",
                     "TotalCashPaytoCustomer": 0,
                     "itemdtl": itemDetails,
                     "noOfDCGiven": 0
                 },
                 "Shipper": {
-                    "CustomerAddress1": "A2,unit no 1,2,4 Mumbai-Nasik Highway Village",
-                    "CustomerAddress2": "Vahuli Post-Padgha",
-                    "CustomerAddress3": "GURGAON,HARYANA",
+                    "CustomerAddress1": "Chhabra Niwas,NICC, Block B",
+                    "CustomerAddress2": "Meera Nagar Near Botanical Cafe",
+                    "CustomerAddress3": "Udaipur,Rajasthan",
                     "CustomerAddressinfo": "",
                     "CustomerCode": "940111",
                     "CustomerEmailID": "",
-                    "CustomerGSTNumber": "HBG567FRED567GH",
+                    "CustomerGSTNumber": "*********KU876G",
                     "CustomerLatitude": "",
                     "CustomerLongitude": "",
                     "CustomerMaskedContactNumber": "",
-                    "CustomerMobile": "7777777777",
-                    "CustomerName": "Pravin Prakash Sangle",
+                    "CustomerMobile": "9785367777",
+                    "CustomerName": "Pooja Chhabra",
                     "CustomerPincode": "122002",
-                    "CustomerTelephone": "7777777777",
+                    "CustomerTelephone": "9785367777",
                     "IsToPayCustomer": false,
                     "OriginArea": "GGN",
-                    "Sender": "BLUE-DART",
+                    "Sender": "Pooja Chhabra",
                     "VendorCode": "125465"
                 }
             },
@@ -236,6 +236,7 @@ export default function GenerateWaybill({ order, onClose }) {
             }
         };
         
+        console.log(DomesticData);
         const InternationalData = {
             "Request": {
                 "Consignee": {
@@ -291,7 +292,7 @@ export default function GenerateWaybill({ order, onClose }) {
                     "BillingReference1": "",  // Add default value if known
                     "BillingReference2": "",  // Add default value if known
                     "CessCharge": 0.0,
-                    "CollectableAmount": 0.0,
+                    "CollectableAmount": parseFloat(order.current_total_price),
                     "Commodity": {
                         "CommodityDetail1": "Rakhi Wrist Band",
                         "CommodityDetail2": "",  // Add default value if known
@@ -301,7 +302,7 @@ export default function GenerateWaybill({ order, onClose }) {
                     "CreditReferenceNo2": "",  // Add default value if known
                     "CreditReferenceNo3": "",  // Add default value if known
                     "CurrencyCode": order.currency || "INR",
-                    "DeclaredValue": parseFloat(order.current_total_price) || 500.0,
+                    "DeclaredValue": parseFloat(order.current_total_price),
                     "DeliveryTimeSlot": "",  // Add default value if known
                     "Dimensions": [
                         {
@@ -431,29 +432,29 @@ export default function GenerateWaybill({ order, onClose }) {
                     "noOfDCGiven": 0
                 },
                 "Shipper": {
-                    "CustomerAddress1": "Test Cust Addr1",
-                    "CustomerAddress2": "Test Cust Addr2",
-                    "CustomerAddress3": "Test Cust Addr3",
+                    "CustomerAddress1": "Chhabra Niwas,NICC, Block B",
+                    "CustomerAddress2": "Meera Nagar Near Botanical Cafe",
+                    "CustomerAddress3": "Udaipur,Rajasthan",
                     "CustomerAddressinfo": "",  // Add default value if known
                     "CustomerBusinessPartyTypeCode": "",  // Add default value if known
                     "CustomerCode": "940111",
-                    "CustomerEmailID": "TestCustEmail@bd.com",
+                    "CustomerEmailID": "chhabrapooja14@gmail.com",
                     "CustomerFiscalID": "",  // Add default value if known
                     "CustomerFiscalIDType": "",  // Add default value if known
-                    "CustomerGSTNumber": "HG56GF34DCR543S",
+                    "CustomerGSTNumber": "************43S",
                     "CustomerLatitude": "",  // Add default value if known
                     "CustomerLongitude": "",  // Add default value if known
                     "CustomerMaskedContactNumber": "",  // Add default value if known
-                    "CustomerMobile": "9996665554",
-                    "CustomerName": "TEST RUN",
+                    "CustomerMobile": "9785367777",
+                    "CustomerName": "Pooja Chhabra",
                     "CustomerPincode": "122002",
                     "CustomerRegistrationNumber": "",  // Add default value if known
                     "CustomerRegistrationNumberIssuerCountryCode": "",  // Add default value if known
                     "CustomerRegistrationNumberTypeCode": "",  // Add default value if known
-                    "CustomerTelephone": "4461606161",
+                    "CustomerTelephone": "9785367777",
                     "IsToPayCustomer": false,
                     "OriginArea": "GGN",
-                    "Sender": "RAJNISH VERMA",
+                    "Sender": "Pooja Chhabra",
                     "VendorCode": "231335"
                 }
             },
@@ -504,7 +505,7 @@ export default function GenerateWaybill({ order, onClose }) {
                     const AwbNo = data.GenerateWayBillResult.AWBNo;
                     const DestinationLocation = data.GenerateWayBillResult.DestinationLocation;
                     const barcodeBase64 = await generateBarcodeBase64(AwbNo);
-
+                    const DestinationArea = data.GenerateWayBillResult.DestinationArea;
                     // Generate PDF using the barcode
                     const blob = await pdf(
                         <MyDocument
@@ -512,6 +513,7 @@ export default function GenerateWaybill({ order, onClose }) {
                             domesticData={DomesticData}
                             AWBNo={AwbNo}
                             destinationLocation={DestinationLocation}
+                            destinationArea={DestinationArea}
                         />
                     ).toBlob();
 
