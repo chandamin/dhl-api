@@ -203,7 +203,7 @@ export default function GenerateWaybill({ order, onClose }) {
                     "ProductType": 2,
                     "RegisterPickup": true,
                     "SpecialInstruction": "",
-                    "SubProductCode": "P",
+                    "SubProductCode": "",
                     "TotalCashPaytoCustomer": 0,
                     "itemdtl": itemDetails,
                     "noOfDCGiven": 0
@@ -235,7 +235,7 @@ export default function GenerateWaybill({ order, onClose }) {
                 "Api_type": "S"
             }
         };
-        
+
         console.log(DomesticData);
         const InternationalData = {
             "Request": {
