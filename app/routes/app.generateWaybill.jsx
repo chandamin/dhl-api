@@ -155,7 +155,7 @@ export default function GenerateWaybill({ order, onClose }) {
                 "Services": {
                     "AWBNo": "",
                     "ActualWeight": "0.50",
-                    "CollectableAmount": parseFloat(order.current_subtotal_price_set.presentment_money.amount),
+                    // "CollectableAmount": parseFloat(order.current_subtotal_price_set.presentment_money.amount),
                     "Commodity": {
                         "CommodityDetail1": "5011100014",
                         "CommodityDetail2": "5011100014",
