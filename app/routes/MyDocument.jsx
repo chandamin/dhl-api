@@ -2,6 +2,7 @@ import React from 'react';
 import { Document, Page, Text, View, StyleSheet, Image } from '@react-pdf/renderer';
 import { Font } from '@react-pdf/renderer';
 import NotoSans from "./fonts/NotoSans-Italic-VariableFont_wdth,wght.ttf";
+import logoImg from '../images/logo.png';
 
 // Register Font
 Font.register({
@@ -40,23 +41,15 @@ const MyDocument = ({ barcodeBase64, domesticData, AWBNo, destinationArea, desti
         <View style={styles.contentWrapper}>
           <View style={styles.header}>
             <View style={styles.logoContainer}>
-              <Image src="/app/img/logo.png" style={styles.logo} />
+              <Image src={logoImg} style={styles.logo} />
             </View>
             <View style={styles.contentContainer}>
               <Text style={styles.orderInfo}>Order No. #{Services.InvoiceNo || 'N/A'}</Text>
               <Text style={styles.orderInfo}>Order Date - {Services.PickupDate ? formatDate(Services.PickupDate) : 'N/A'}</Text>
-              <Text style={styles.orderInfo}>Sender's Address - {Shipper.CustomerAddress1 || 'N/A'},{Shipper.CustomerAddress2 || 'N/A'} - {Shipper.CustomerPincode || 'N/A'}</Text>
+              <Text style={styles.orderInfo}>Address - {Shipper.CustomerAddress3 || 'N/A'} - {Shipper.CustomerPincode || 'N/A'}</Text>
               <Text style={styles.orderInfo}>Shipped By - {Shipper.Sender || 'N/A'}</Text>
               <Text style={styles.orderInfo}>GSTIN - {Shipper.CustomerGSTNumber || 'N/A'}</Text>
-              {/* <Text style={styles.prepaid}>Prepaid</Text> */}
-              <Text style={styles.prepaid}>
-                {Services.SubProductCode === 'P' ? 'Prepaid' :
-                  Services.SubProductCode === 'D' ? 'Demand Draft on Delivery' :
-                    Services.SubProductCode === 'C' ? 'Cash on Delivery' :
-                      Services.SubProductCode === 'A' ? 'Freight on Delivery' :
-                        Services.SubProductCode === 'B' ? 'Demand Draft on Delivery & Freight on Delivery' :
-                          ''}
-              </Text>
+              <Text style={styles.prepaidRight}>Prepaid</Text>
             </View>
           </View>
 
@@ -78,62 +71,7 @@ const MyDocument = ({ barcodeBase64, domesticData, AWBNo, destinationArea, desti
               {/* <Text style={styles.deliveryContent}>{Consignee.ConsigneeCityName || 'N/A'}</Text>
               <Text style={styles.deliveryContent}>{Consignee.ConsigneeCountryCode || 'N/A'}</Text> */}
             </View>
-            {(() => {
-              let serviceDisplay;
-
-              switch (Services.SubProductCode) {
-                case 'P':
-                  serviceDisplay = (
-                    <>
-                      <Text style={styles.prepaidRight}>Prepaid</Text>
-                      <Text style={styles.prepaidRight}>Rs. {Services.DeclaredValue}</Text>
-                    </>
-                  );
-                  break;
-                case 'D':
-                  serviceDisplay = (
-                    <>
-                      <Text style={styles.prepaidRight}>DOD</Text>
-                      <Text style={styles.prepaidRight}>Rs. {Services.DeclaredValue}</Text>
-                    </>
-                  );
-                  break;
-                case 'C':
-                  serviceDisplay = (
-                    <>
-                      <Text style={styles.prepaidRight}>COD</Text>
-                      <Text style={styles.prepaidRight}>Rs. {Services.DeclaredValue}</Text>
-                    </>
-                  );
-                  break;
-                case 'A':
-                  serviceDisplay = (
-                    <>
-                      <Text style={styles.prepaidRight}>FOD</Text>
-                      <Text style={styles.prepaidRight}>Rs. {Services.DeclaredValue}</Text>
-                    </>
-                  );
-                  break;
-                case 'B':
-                  serviceDisplay = (
-                    <>
-                      <Text style={styles.prepaidRight}>DOD & FOD</Text>
-                      <Text style={styles.prepaidRight}>Rs. {Services.DeclaredValue}</Text>
-                    </>
-                  );
-                  break;
-                default:
-                  serviceDisplay = (
-                    <>
-                      <Text style={styles.prepaidRight}>Prepaid</Text>
-                      <Text style={styles.prepaidRight}>Rs. {Services.DeclaredValue}</Text>
-                    </>
-                  );
-                  break;
-              }
-
-              return serviceDisplay;
-            })()}
+            <Text style={styles.prepaidRight}>Prepaid</Text>
           </View>
 
           <View style={styles.tableContainer}>
@@ -159,8 +97,7 @@ const MyDocument = ({ barcodeBase64, domesticData, AWBNo, destinationArea, desti
 
           <View style={styles.footer}>
             <Text style={styles.fo_text}>If undelivered, please return to:</Text>
-            <Text style={styles.fo_text}>{Shipper.CustomerAddress1 || 'N/A'},{Shipper.CustomerAddress2 || 'N/A'} - {Shipper.CustomerPincode || 'N/A'}</Text>
-            <Text style={styles.fo_text}>Phone - {Shipper.CustomerMobile || 'N/A'}</Text>
+            <Text style={styles.fo_text}>{Shipper.CustomerAddress1 || 'N/A'},{Shipper.CustomerAddress2 || 'N/A'} , {Shipper.CustomerAddress3 || 'N/A'} - {Shipper.CustomerPincode || 'N/A'} , Phone - {Shipper.CustomerMobile || 'N/A'}</Text>
             <Text style={styles.disclaimer}>
               Disclaimer: Blue Dart is not responsible for any kind of cost difference or poor quality.
             </Text>
@@ -173,6 +110,9 @@ const MyDocument = ({ barcodeBase64, domesticData, AWBNo, destinationArea, desti
 
 // Define styles for the PDF content
 const styles = StyleSheet.create({
+  page:{
+    family: 'Roboto',
+  },
   body: {
     padding: 30,
     margin: 0,
@@ -180,8 +120,8 @@ const styles = StyleSheet.create({
   },
   contentWrapper: {
     margin: 10,
-    height: '60%',
-    width: '70%',
+    height: '55%',
+    width: '55%',
     border: '2px solid black',
   },
   header: {
@@ -189,25 +129,30 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     borderBottomWidth: 1,
     borderBottomColor: 'black',
-    height: '20%'
+    height: '26%',
+    paddingBottom:10,
+    marginBottom:10,
   },
   logoContainer: {
-    width: '40%',
+    width: '50%',
     paddingLeft: 10,
     paddingVertical: 5,
-    paddingTop: 2,
+    paddingTop: 12,
   },
   logo: {
-    width: 90,
-    height: 40,
+    width: 100,
+    height: 50,
     objectFit: 'fill',
   },
   contentContainer: {
     width: '60%',
     padding: 10,
-    paddingVertical: 5,
+    paddingVertical: 10,
     textAlign: 'right',
-    marginBottom: 10
+  },
+  prepaid:{
+    marginBottom:50,
+    paddingBottom:20
   },
   orderInfo: {
     fontSize: 7,
@@ -230,7 +175,7 @@ const styles = StyleSheet.create({
   },
   barcodeImage: {
     width: 200,
-    height: 130,
+    height: 100,
     objectFit: 'fill',
     alignSelf: 'center',
   },
@@ -259,6 +204,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'right',
     marginRight: 10,
+    marginBottom:10
   },
   tableContainer: {
     borderBottom: '1px solid black',

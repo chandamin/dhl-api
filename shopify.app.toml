@@ -3,7 +3,7 @@
 client_id = "5c764bacb88ec972c016fac4ca6182bc"
 name = "dhl-api"
 handle = "dhl-api-5"
-application_url = "https://ones-ec-roller-ra.trycloudflare.com"
+application_url = "https://casey-st-chelsea-furthermore.trycloudflare.com"
 embedded = true
 
 [build]
@@ -17,9 +17,9 @@ scopes = "write_draft_orders,write_orders"
 
 [auth]
 redirect_urls = [
-  "https://ones-ec-roller-ra.trycloudflare.com/auth/callback",
-  "https://ones-ec-roller-ra.trycloudflare.com/auth/shopify/callback",
-  "https://ones-ec-roller-ra.trycloudflare.com/api/auth/callback"
+  "https://casey-st-chelsea-furthermore.trycloudflare.com/auth/callback",
+  "https://casey-st-chelsea-furthermore.trycloudflare.com/auth/shopify/callback",
+  "https://casey-st-chelsea-furthermore.trycloudflare.com/api/auth/callback"
 ]
 
 [webhooks]

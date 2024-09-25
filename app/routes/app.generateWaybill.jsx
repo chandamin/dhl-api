@@ -53,7 +53,6 @@ export default function GenerateWaybill({ order, onClose }) {
 
     const fetchWaybill = async () => {
         if (!jwtToken) {
-            setErrorMessage('JWT token is not available.');
             return;
         }
 
@@ -93,39 +92,39 @@ export default function GenerateWaybill({ order, onClose }) {
 
         const internationalItemDetails = order.line_items.map((item, index) => ({
             "CGSTAmount": 0.0,
-            "CommodityCode": "FOODSTUFF",  // This can be dynamic if needed
+            // "CommodityCode": "FOODSTUFF",
             "Discount": 0.0,
-            "HSCode": item.hs_code || "95059090",  // Assuming HSCode can be derived from the item
+            "HSCode": item.hs_code || "95059090",  
             "IGSTAmount": 0.0,
             "IGSTRate": 0.0,
             "Instruction": "",
             "InvoiceDate": `/Date(${new Date(order.created_at).getTime()})/`,
             "InvoiceNumber": order.order_number.toString(),
             "IsMEISS": "0",
-            "ItemID": index.toString(),  // Using index instead of item.id for dynamic values
-            "ItemName": item.name || "N/A",  // Name from item data
-            "ItemValue": parseFloat(item.price),  // Price from item data
-            "Itemquantity": item.quantity,  // Quantity from item data
-            "LicenseNumber": "",  // Can be filled if available
-            "ManufactureCountryCode": "IN",  // For international, usually "IN" for India
-            "ManufactureCountryName": "India",  // Assuming this for the item
-            "PerUnitRate": parseFloat(item.price),  // Price per unit
-            "PieceID": (index + 1).toString(),  // Sequential ID for each piece
+            "ItemID": (index+1).toString(),  
+            "ItemName": item.name || "N/A", 
+            "ItemValue": parseFloat(item.price_set.presentment_money.amount),  
+            "Itemquantity": item.quantity, 
+            "LicenseNumber": "",  
+            "ManufactureCountryCode": "IN",  
+            "ManufactureCountryName": "India", 
+            "PerUnitRate": parseFloat(item.price_set.presentment_money.amount),  
+            "PieceID":"23451",
             "PieceIGSTPercentage": 0.0,
-            "PlaceofSupply": "",  // Can be left blank unless needed
-            "ProductDesc1": item.title || "Others",  // Description from item data
-            "ProductDesc2": "",  // Optional additional description
-            "ReturnReason": "",  // Can be filled dynamically if needed
+            "PlaceofSupply": "",  
+            "ProductDesc1": item.title || "Others",  
+            "ProductDesc2": "", 
+            "ReturnReason": "", 
             "SGSTAmount": 0.0,
-            "SKUNumber": item.sku || "SKU1771",  // SKU from item data, if available
-            "SellerGSTNNumber": "",  // Seller GSTN, can be added dynamically
-            "SellerName": "",  // Seller name, can be added dynamically
-            "TaxableAmount": parseFloat(item.price) * item.quantity,  // Total taxable amount
-            "TotalValue": parseFloat(item.price) * item.quantity,  // Total value
-            "Unit": "PCS",  // Default unit as "PCS" (pieces)
-            "Weight": item.grams / 1000,  // Assuming weight is in grams, convert to kg
+            "SKUNumber": item.sku || "NA", 
+            "SellerGSTNNumber": "", 
+            "SellerName": "", 
+            "TaxableAmount": parseFloat(item.price_set.presentment_money.amount) * item.quantity,  
+            "TotalValue": parseFloat(item.price_set.presentment_money.amount) * item.quantity,  
+            "Unit": "PCS", 
+            "Weight": item.grams / 1000, 
             "cessAmount": "0.0",
-            "countryOfOrigin": "IN"  // Assuming the origin is India
+            "countryOfOrigin": "IN"  
         }));
 
         const DomesticData = {
@@ -164,8 +163,8 @@ export default function GenerateWaybill({ order, onClose }) {
                     "CreditReferenceNo": generateRandomString(10),
                     "CreditReferenceNo2": "",
                     "CreditReferenceNo3": "",
-                    "CurrencyCode": order.currency,
-                    "DeclaredValue": parseFloat(order.current_subtotal_price_set.presentment_money.amount),
+                    "CurrencyCode": order.current_total_price_set.presentment_money.currency_code,
+                    "DeclaredValue": parseFloat(order.current_total_price_set.presentment_money.amount),
                     "DeliveryTimeSlot": "",
                     "Dimensions": [
                         {
@@ -236,7 +235,6 @@ export default function GenerateWaybill({ order, onClose }) {
             }
         };
 
-        console.log(DomesticData);
         const InternationalData = {
             "Request": {
                 "Consignee": {
@@ -247,11 +245,11 @@ export default function GenerateWaybill({ order, onClose }) {
                     "ConsigneeAddress3": order.billing_address.city || order.shipping_address.city || "ST LOUIS,MO (MISSOURI)",
                     "ConsigneeAddressType": "",  // Add default value if known
                     "ConsigneeAddressinfo": "",  // Add default value if known
-                    "ConsigneeAttention": `${order.shipping_address.first_name} ${order.shipping_address.last_name}` || "RAJNISH VERMA",
+                    "ConsigneeAttention": `${order.shipping_address.first_name} ${order.shipping_address.last_name}` || "NA",
                     "ConsigneeBusinessPartyTypeCode": "",  // Add default value if known
                     "ConsigneeCityName": order.billing_address.city || order.shipping_address.city || "Dubai",
-                    "ConsigneeCountryCode": order.shipping_address.country_code || "AE",
-                    "ConsigneeEmailID": order.customer.email || "abc@gmail.com",
+                    "ConsigneeCountryCode": order.shipping_address.country_code || order.billing_address.country_code || "AE",
+                    "ConsigneeEmailID": order.customer.email || "test@gmail.com",
                     "ConsigneeFiscalID": "",  // Add default value if known
                     "ConsigneeFiscalIDType": "",  // Add default value if known
                     "ConsigneeFullAddress": "",  // Add default value if known
@@ -292,7 +290,7 @@ export default function GenerateWaybill({ order, onClose }) {
                     "BillingReference1": "",  // Add default value if known
                     "BillingReference2": "",  // Add default value if known
                     "CessCharge": 0.0,
-                    "CollectableAmount": parseFloat(order.current_total_price),
+                    // "CollectableAmount": parseFloat(order.current_total_price),
                     "Commodity": {
                         "CommodityDetail1": "Rakhi Wrist Band",
                         "CommodityDetail2": "",  // Add default value if known
@@ -301,13 +299,12 @@ export default function GenerateWaybill({ order, onClose }) {
                     "CreditReferenceNo": generateRandomString(10),
                     "CreditReferenceNo2": "",  // Add default value if known
                     "CreditReferenceNo3": "",  // Add default value if known
-                    "CurrencyCode": order.currency || "INR",
-                    "DeclaredValue": parseFloat(order.current_total_price),
-                    "DeliveryTimeSlot": "",  // Add default value if known
+                    "CurrencyCode": order.current_total_price_set.presentment_money.currency_code,
+                    "DeclaredValue": parseFloat(order.current_total_price_set.presentment_money.amount),
                     "Dimensions": [
                         {
                             "Breadth": 10,
-                            "Count": order.line_items.length.toString() || 1,
+                            "Count": 1,
                             "Height": 10,
                             "Length": 10
                         }
@@ -359,98 +356,38 @@ export default function GenerateWaybill({ order, onClose }) {
                     "IsPartialPickup": false,
                     "IsReversePickup": false,
                     "ItemCount": order.line_items.length || 1,
-                    "MarketplaceName": "",  // Add default value if known
-                    "MarketplaceURL": "",  // Add default value if known
                     "NFEIFlag": false,
-                    "NotificationMessage": "",  // Add default value if known
-                    "Officecutofftime": "",  // Add default value if known
-                    "OrderURL": "",  // Add default value if known
                     "PDFOutputNotRequired": false,
                     "PackType": "1",
-                    "ParcelShopCode": "",  // Add default value if known
-                    "PayableAt": "",  // Add default value if known
                     "PayerGSTVAT": 0.0,
                     "PickupDate": `/Date(${new Date(order.created_at).getTime()})/`,
-                    "PickupMode": "",  // Add default value if known
                     "PickupTime": "1400",
-                    "PickupType": "",  // Add default value if known
-                    "PieceCount": internationalItemDetails.length.toString() || "0",
+                    // "PieceCount": internationalItemDetails.length.toString() || "0",
+                    "PieceCount": 1,
                     "PrinterLableSize": "4",
-                    "PreferredPickupTimeSlot": "",  // Add default value if known
                     "ProductCode": "I",
-                    "ProductFeature": "",  // Add default value if known
                     "ProductType": 2,
                     "RegisterPickup": false,
                     "ReverseCharge": 0.0,
-                    "SignatureName": "",  // Add default value if known
-                    "SignatureTitle": "",  // Add default value if known
-                    "SpecialInstruction": "",  // Add default value if known
                     "SubProductCode": "",  // Add default value if known
                     "SupplyOfIGST": "No",
                     "SupplyOfwoIGST": "Yes",
                     "TermsOfTrade": "DAP",
                     "TotalCashPaytoCustomer": 0.0,
                     "Total_IGST_Paid": 0.0,
-                    "itemdtl": [
-                        {
-                            "CGSTAmount": 0.0,
-                            "CommodityCode": "FOODSTUFF",
-                            "Discount": 0.0,
-                            "HSCode": "95059090",
-                            "IGSTAmount": 0.0,
-                            "IGSTRate": 0.0,
-                            "Instruction": "",  // Add default value if known
-                            "InvoiceDate": `/Date(${new Date(order.created_at).getTime()})/`,
-                            "InvoiceNumber": order.order_number.toString() || "1212121",  // Ensure InvoiceNumber is provided or set default
-                            "IsMEISS": "0",
-                            "ItemID": "13232",
-                            "ItemName": "Rakhi",
-                            "ItemValue": parseFloat(order.current_total_price) || 500.0,
-                            "Itemquantity": order.line_items.length || 1,
-                            "LicenseNumber": "",  // Add default value if known
-                            "ManufactureCountryCode": "IN",
-                            "ManufactureCountryName": "INDIA",
-                            "PerUnitRate": parseFloat(order.current_total_price) / (order.line_items.length || 1) || 500.0,
-                            "PieceID": "1",
-                            "PieceIGSTPercentage": 0.0,
-                            "PlaceofSupply": "",  // Add default value if known
-                            "ProductDesc1": "Others",
-                            "ProductDesc2": "",  // Add default value if known
-                            "ReturnReason": "",  // Add default value if known
-                            "SGSTAmount": 0.0,
-                            "SKUNumber": "SKU1771",
-                            "SellerGSTNNumber": "",  // Add default value if known
-                            "SellerName": "",  // Add default value if known
-                            "TaxableAmount": parseFloat(order.current_total_price) || 500.0,
-                            "TotalValue": parseFloat(order.current_total_price) || 500.0,
-                            "Unit": "PCS",
-                            "Weight": "0.50",
-                            "cessAmount": "0.0",
-                            "countryOfOrigin": "IN"
-                        }
-                    ],
+                    "itemdtl": internationalItemDetails,
                     "noOfDCGiven": 0
                 },
                 "Shipper": {
                     "CustomerAddress1": "Chhabra Niwas,NICC, Block B",
                     "CustomerAddress2": "Meera Nagar Near Botanical Cafe",
                     "CustomerAddress3": "Udaipur,Rajasthan",
-                    "CustomerAddressinfo": "",  // Add default value if known
-                    "CustomerBusinessPartyTypeCode": "",  // Add default value if known
                     "CustomerCode": "940111",
                     "CustomerEmailID": "chhabrapooja14@gmail.com",
-                    "CustomerFiscalID": "",  // Add default value if known
-                    "CustomerFiscalIDType": "",  // Add default value if known
-                    "CustomerGSTNumber": "************43S",
-                    "CustomerLatitude": "",  // Add default value if known
-                    "CustomerLongitude": "",  // Add default value if known
-                    "CustomerMaskedContactNumber": "",  // Add default value if known
+                    "CustomerGSTNumber": "HF764GBD78DHY67",
                     "CustomerMobile": "9785367777",
                     "CustomerName": "Pooja Chhabra",
                     "CustomerPincode": "122002",
-                    "CustomerRegistrationNumber": "",  // Add default value if known
-                    "CustomerRegistrationNumberIssuerCountryCode": "",  // Add default value if known
-                    "CustomerRegistrationNumberTypeCode": "",  // Add default value if known
                     "CustomerTelephone": "9785367777",
                     "IsToPayCustomer": false,
                     "OriginArea": "GGN",
@@ -464,7 +401,7 @@ export default function GenerateWaybill({ order, onClose }) {
                 "Api_type": "S"
             }
         };
-
+        console.log(InternationalData);
 
         let RequestData = "";
         if (order.shipping_address.country_code !== 'IN') {
@@ -472,6 +409,7 @@ export default function GenerateWaybill({ order, onClose }) {
         } else {
             RequestData = DomesticData;
         }
+        console.log(RequestData);
         try {
             setLoading(true);
             const res = await fetch('https://apigateway-sandbox.bluedart.com/in/transportation/waybill/v1/GenerateWayBill', {
