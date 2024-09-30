@@ -3,13 +3,12 @@
 client_id = "5c764bacb88ec972c016fac4ca6182bc"
 name = "dhl-api"
 handle = "dhl-api-5"
-application_url = "https://casey-st-chelsea-furthermore.trycloudflare.com"
+application_url = "https://guaranteed-discussion-firmware-ups.trycloudflare.com"
 embedded = true
 
 [build]
 automatically_update_urls_on_dev = true
 dev_store_url = "quickstart-9dd3668a.myshopify.com"
-include_config_on_deploy = true
 
 [access_scopes]
 # Learn more at https://shopify.dev/docs/apps/tools/cli/configuration#access_scopes
@@ -17,9 +16,9 @@ scopes = "write_draft_orders,write_orders"
 
 [auth]
 redirect_urls = [
-  "https://casey-st-chelsea-furthermore.trycloudflare.com/auth/callback",
-  "https://casey-st-chelsea-furthermore.trycloudflare.com/auth/shopify/callback",
-  "https://casey-st-chelsea-furthermore.trycloudflare.com/api/auth/callback"
+  "https://guaranteed-discussion-firmware-ups.trycloudflare.com/auth/callback",
+  "https://guaranteed-discussion-firmware-ups.trycloudflare.com/auth/shopify/callback",
+  "https://guaranteed-discussion-firmware-ups.trycloudflare.com/api/auth/callback"
 ]
 
 [webhooks]

@@ -3,7 +3,7 @@
 client_id = "97f6fe1dacfcc11955a7a98ccf2bd1b5"
 name = "Dhl App"
 handle = "dhl-app-4"
-application_url = "https://parties-replacing-hewlett-networks.trycloudflare.com"
+application_url = "https://computing-wishing-populations-twin.trycloudflare.com"
 embedded = true
 
 [build]
@@ -17,9 +17,9 @@ scopes = "write_draft_orders,write_orders"
 
 [auth]
 redirect_urls = [
-  "https://parties-replacing-hewlett-networks.trycloudflare.com/auth/callback",
-  "https://parties-replacing-hewlett-networks.trycloudflare.com/auth/shopify/callback",
-  "https://parties-replacing-hewlett-networks.trycloudflare.com/api/auth/callback"
+  "https://computing-wishing-populations-twin.trycloudflare.com/auth/callback",
+  "https://computing-wishing-populations-twin.trycloudflare.com/auth/shopify/callback",
+  "https://computing-wishing-populations-twin.trycloudflare.com/api/auth/callback"
 ]
 
 [webhooks]

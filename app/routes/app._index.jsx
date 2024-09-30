@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Page, Card, DataTable, Button } from '@shopify/polaris';
+import { Page, Card, DataTable, Button, Modal } from '@shopify/polaris';
 import { useLoaderData } from '@remix-run/react';
 import { json } from '@remix-run/react';
 import shopify from '../shopify.server';
@@ -32,17 +32,19 @@ const formatOrderData = (order, handleWaybillClick) => {
     formatTotalPrice(order.current_total_price, order.currency),
     order.financial_status || 'N/A',
     `${order.line_items.length} items`,
-    <Button onClick={() => handleWaybillClick(order)}>Shipping Print</Button>
+    <Button onClick={() => handleWaybillClick(order)}>Generate Waybill</Button>
   ];
 };
 
 export default function Index() {
   const orders = useLoaderData();
   const [selectedOrder, setSelectedOrder] = useState(null);
+  const [modalOpen, setModalOpen] = useState(false);
 
   // Handle waybill generation click
   const handleWaybillClick = (order) => {
     setSelectedOrder(order);
+    setModalOpen(true);
   };
 
   // Format rows for the DataTable
@@ -51,12 +53,6 @@ export default function Index() {
   return (
     <Page title="Orders">
       <Card>
-        {selectedOrder && (
-          <GenerateWaybill
-            order={selectedOrder}
-            onClose={() => setSelectedOrder(null)} // Optionally add a close handler
-          />
-        )}
         <DataTable
           columnContentTypes={[
             'text',   // Order
@@ -78,6 +74,24 @@ export default function Index() {
           ]}
           rows={rows}
         />
+        <Modal
+          open={modalOpen}
+          onClose={() => setModalOpen(false)}
+          title="Generate Waybill"
+          primaryAction={{
+            content: 'Close',
+            onAction: () => setModalOpen(false),
+          }}
+        >
+          <Modal.Section>
+            {selectedOrder && (
+              <GenerateWaybill
+                order={selectedOrder}
+                onClose={() => setModalOpen(false)} // Close handler to reset selectedOrder
+              />
+            )}
+          </Modal.Section>
+        </Modal>
       </Card>
     </Page>
   );

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Page, Button, Spinner, Text } from '@shopify/polaris';
+import { Page, Button, Spinner, Text, Card, BlockStack } from '@shopify/polaris';
 import { pdf } from '@react-pdf/renderer';
 import { generateBarcodeBase64 } from './util/barcodeUtils';
 import MyDocument from './MyDocument';
@@ -94,37 +94,37 @@ export default function GenerateWaybill({ order, onClose }) {
             "CGSTAmount": 0.0,
             // "CommodityCode": "FOODSTUFF",
             "Discount": 0.0,
-            "HSCode": item.hs_code || "95059090",  
+            "HSCode": item.hs_code || "95059090",
             "IGSTAmount": 0.0,
             "IGSTRate": 0.0,
             "Instruction": "",
             "InvoiceDate": `/Date(${new Date(order.created_at).getTime()})/`,
             "InvoiceNumber": order.order_number.toString(),
             "IsMEISS": "0",
-            "ItemID": (index+1).toString(),  
-            "ItemName": item.name || "N/A", 
-            "ItemValue": parseFloat(item.price_set.presentment_money.amount),  
-            "Itemquantity": item.quantity, 
-            "LicenseNumber": "",  
-            "ManufactureCountryCode": "IN",  
-            "ManufactureCountryName": "India", 
-            "PerUnitRate": parseFloat(item.price_set.presentment_money.amount),  
-            "PieceID":"23451",
+            "ItemID": (index + 1).toString(),
+            "ItemName": item.name || "N/A",
+            "ItemValue": parseFloat(item.price_set.presentment_money.amount),
+            "Itemquantity": item.quantity,
+            "LicenseNumber": "",
+            "ManufactureCountryCode": "IN",
+            "ManufactureCountryName": "India",
+            "PerUnitRate": parseFloat(item.price_set.presentment_money.amount),
+            "PieceID": "23451",
             "PieceIGSTPercentage": 0.0,
-            "PlaceofSupply": "",  
-            "ProductDesc1": item.title || "Others",  
-            "ProductDesc2": "", 
-            "ReturnReason": "", 
+            "PlaceofSupply": "",
+            "ProductDesc1": item.title || "Others",
+            "ProductDesc2": "",
+            "ReturnReason": "",
             "SGSTAmount": 0.0,
-            "SKUNumber": item.sku || "NA", 
-            "SellerGSTNNumber": "", 
-            "SellerName": "", 
-            "TaxableAmount": parseFloat(item.price_set.presentment_money.amount) * item.quantity,  
-            "TotalValue": parseFloat(item.price_set.presentment_money.amount) * item.quantity,  
-            "Unit": "PCS", 
-            "Weight": item.grams / 1000, 
+            "SKUNumber": item.sku || "NA",
+            "SellerGSTNNumber": "",
+            "SellerName": "",
+            "TaxableAmount": parseFloat(item.price_set.presentment_money.amount) * item.quantity,
+            "TotalValue": parseFloat(item.price_set.presentment_money.amount) * item.quantity,
+            "Unit": "PCS",
+            "Weight": item.grams / 1000,
             "cessAmount": "0.0",
-            "countryOfOrigin": "IN"  
+            "countryOfOrigin": "IN"
         }));
 
         const DomesticData = {
@@ -476,18 +476,37 @@ export default function GenerateWaybill({ order, onClose }) {
     }, [order]);
 
     return (
-        <Page>
-            {loading && <Spinner size="large" />}
-            {errorMessage && <Text color="red">{errorMessage}</Text>}
-            {pdfUrl && (
-                <iframe
-                    src={pdfUrl}
-                    style={{ width: '100%', height: '600px' }}
-                    title="PDF Preview"
-                />
-            )}
-            <Button onClick={fetchWaybill}>Generate PDF</Button>
-            <Button onClick={onClose}>Close</Button>
-        </Page>
+            <Page>
+                {errorMessage && <Text color="red">{errorMessage}</Text>}
+                <BlockStack gap={400}>
+                    <Text color="warning" variant="headingMd" as="h2">Are you sure you want to generate a waybill for the following customer?</Text>
+                    {loading && <Spinner size='small'/>}
+                    {!loading && !errorMessage && (
+                        <Card sectioned>
+                            <Text><strong>Order Number:</strong> {order.order_number}</Text>
+                            <Text><strong>Customer:</strong> {`${order.customer.first_name} ${order.customer.last_name}`}</Text>
+                            <Text><strong>Date:</strong> {new Date(order.created_at).toLocaleString()}</Text>
+                            <Text><strong>Total Price:</strong> {`${order.currency} ${order.current_total_price}`}</Text>
+                            <Text><strong>Items:</strong></Text>
+                            <ul>
+                                {order.line_items.map(item => (
+                                    <li key={item.id}>
+                                        {item.quantity} x {item.title}
+                                    </li>
+                                ))}
+                            </ul>
+                        </Card>
+                    )}
+                    {pdfUrl && (
+                        <iframe
+                            src={pdfUrl}
+                            style={{ width: '100%', height: '600px' }}
+                            title="PDF Preview"
+                        />
+                    )}
+
+                    <Button onClick={fetchWaybill} variant="primary">Download PDF</Button>
+                </BlockStack>
+            </Page>
     );
 }

@@ -25,20 +25,25 @@ const MyDocument = ({ barcodeBase64, domesticData, AWBNo, destinationArea, desti
   const Shipper = domesticData.Request.Shipper;
 
   const { itemdtl = [] } = Services;
-  const formatDate = (timestamp) => {
-    // Convert the timestamp from milliseconds to a Date object
-    const date = new Date(parseInt(timestamp.match(/\d+/)[0]));
 
-    // Format the date as needed (example: YYYY-MM-DD)
-    const formattedDate = date.toISOString().split('T')[0]; // This will return "YYYY-MM-DD"
-    const symbol = '₹';
-    return formattedDate;
+  // Calculate height based on item count
+  const itemCount = itemdtl.length;
+  let contentHeight = '55%'; 
+
+  if (itemCount > 2) {
+    contentHeight = `${Math.min(45 + (itemCount - 2) * 5, 85)}%`;
+  }
+
+
+  const formatDate = (timestamp) => {
+    const date = new Date(parseInt(timestamp.match(/\d+/)[0]));
+    return date.toISOString().split('T')[0];
   };
 
   return (
     <Document>
       <Page style={styles.body}>
-        <View style={styles.contentWrapper}>
+        <View style={{ ...styles.contentWrapper, height: contentHeight }}>
           <View style={styles.header}>
             <View style={styles.logoContainer}>
               <Image src={logoImg} style={styles.logo} />
@@ -67,9 +72,6 @@ const MyDocument = ({ barcodeBase64, domesticData, AWBNo, destinationArea, desti
               <Text style={styles.deliveryContent}>{Consignee.ConsigneeAttention || 'N/A'}</Text>
               <Text style={styles.deliveryContent}>{Consignee.ConsigneeAddress2 || 'N/A'} , {Consignee.ConsigneeAddress1 || 'N/A'}</Text>
               <Text style={styles.deliveryContent}>{Consignee.ConsigneeAddress3 || 'N/A'} - {Consignee.ConsigneePincode}</Text>
-              {/* <Text style={styles.deliveryContent}></Text> */}
-              {/* <Text style={styles.deliveryContent}>{Consignee.ConsigneeCityName || 'N/A'}</Text>
-              <Text style={styles.deliveryContent}>{Consignee.ConsigneeCountryCode || 'N/A'}</Text> */}
             </View>
             <Text style={styles.prepaidRight}>Prepaid</Text>
           </View>
@@ -94,7 +96,6 @@ const MyDocument = ({ barcodeBase64, domesticData, AWBNo, destinationArea, desti
             </Text>
           </View>
 
-
           <View style={styles.footer}>
             <Text style={styles.fo_text}>If undelivered, please return to:</Text>
             <Text style={styles.fo_text}>{Shipper.CustomerAddress1 || 'N/A'},{Shipper.CustomerAddress2 || 'N/A'} , {Shipper.CustomerAddress3 || 'N/A'} - {Shipper.CustomerPincode || 'N/A'} , Phone - {Shipper.CustomerMobile || 'N/A'}</Text>
@@ -110,7 +111,7 @@ const MyDocument = ({ barcodeBase64, domesticData, AWBNo, destinationArea, desti
 
 // Define styles for the PDF content
 const styles = StyleSheet.create({
-  page:{
+  page: {
     family: 'Roboto',
   },
   body: {
@@ -120,8 +121,7 @@ const styles = StyleSheet.create({
   },
   contentWrapper: {
     margin: 10,
-    height: '55%',
-    width: '55%',
+    width: '70%',
     border: '2px solid black',
   },
   header: {
@@ -130,8 +130,8 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: 'black',
     height: '26%',
-    paddingBottom:10,
-    marginBottom:10,
+    paddingBottom: 10,
+    marginBottom: 10,
   },
   logoContainer: {
     width: '50%',
@@ -150,9 +150,12 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     textAlign: 'right',
   },
-  prepaid:{
-    marginBottom:50,
-    paddingBottom:20
+  prepaidRight: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    textAlign: 'right',
+    marginRight: 10,
+    marginBottom: 10,
   },
   orderInfo: {
     fontSize: 7,
@@ -163,7 +166,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: 'black',
     paddingHorizontal: 10,
-    paddingVertical: 2,
+    paddingVertical: 15,
     alignItems: 'center',
     textAlign: 'center',
   },
@@ -184,7 +187,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     borderBottom: '1px solid black',
     padding: 5,
-    paddingBottom: 10
+    paddingBottom: 10,
   },
   address: {
     width: '70%',
@@ -197,14 +200,6 @@ const styles = StyleSheet.create({
   deliveryContent: {
     fontSize: 8,
     marginBottom: 8,
-
-  },
-  prepaidRight: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    textAlign: 'right',
-    marginRight: 10,
-    marginBottom:10
   },
   tableContainer: {
     borderBottom: '1px solid black',
@@ -216,7 +211,7 @@ const styles = StyleSheet.create({
     borderBottomStyle: 'solid',
   },
   tableHeaderText: {
-    flex: 1, // Default flex
+    flex: 1,
     fontSize: 8,
     textAlign: 'center',
     padding: 5,
@@ -228,18 +223,6 @@ const styles = StyleSheet.create({
   noborder: {
     borderLeftWidth: 0,
   },
-  tableHeaderTextSerial: {
-    flex: 0.2, // Less width for S.no
-  },
-  tableHeaderTextSku: {
-    flex: 0.5, // Less width for S.no
-  },
-  tableHeaderTextQty: {
-    flex: 0.2, // Less width for Qty
-  },
-  tableHeaderTextDescription: {
-    flex: 2, // More width for Item Description
-  },
   tableRow: {
     flexDirection: 'row',
     borderBottomWidth: 1,
@@ -247,7 +230,7 @@ const styles = StyleSheet.create({
     borderBottomStyle: 'solid',
   },
   tableCell: {
-    flex: 1, // Default flex
+    flex: 1,
     fontSize: 6,
     textAlign: 'center',
     padding: 5,
@@ -255,20 +238,7 @@ const styles = StyleSheet.create({
     borderLeftWidth: 1,
     borderLeftColor: '#000',
     borderLeftStyle: 'solid',
-    minHeight: 10, // Ensure minimum height
-  },
-  tableCellSerial: {
-    flex: 0.2, // Less width for S.no
-  },
-  tableCellSku: {
-    flex: 0.5, // Less width for S.no
-  },
-  tableCellQty: {
-    flex: 0.2, // Less width for Qty
-  },
-  tableCellDescription: {
-    flex: 2, // More width for Item Description
-    textAlign: 'left',
+    minHeight: 10,
   },
   dimensions: {
     fontSize: 6,
@@ -277,7 +247,6 @@ const styles = StyleSheet.create({
     paddingTop: 4,
     paddingBottom: 10,
   },
-
   footer: {
     fontSize: 10,
     textAlign: 'center',
@@ -291,7 +260,6 @@ const styles = StyleSheet.create({
     marginTop: 0,
     fontSize: 8,
     paddingLeft: 5,
-    prepaidRight: 5,
     paddingBottom: 25,
   },
 });
