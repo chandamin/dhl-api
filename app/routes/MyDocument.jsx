@@ -28,7 +28,7 @@ const MyDocument = ({ barcodeBase64, domesticData, AWBNo, destinationArea, desti
 
   // Calculate height based on item count
   const itemCount = itemdtl.length;
-  let contentHeight = '55%'; 
+  let contentHeight = '55%';
 
   if (itemCount > 2) {
     contentHeight = `${Math.min(45 + (itemCount - 2) * 5, 85)}%`;
@@ -73,7 +73,10 @@ const MyDocument = ({ barcodeBase64, domesticData, AWBNo, destinationArea, desti
               <Text style={styles.deliveryContent}>{Consignee.ConsigneeAddress2 || 'N/A'} , {Consignee.ConsigneeAddress1 || 'N/A'}</Text>
               <Text style={styles.deliveryContent}>{Consignee.ConsigneeAddress3 || 'N/A'} - {Consignee.ConsigneePincode}</Text>
             </View>
-            <Text style={styles.prepaidRight}>Prepaid</Text>
+            <View style={styles.prepaidContainer}>
+              <Text style={styles.prepaidRight}>Prepaid</Text>
+              <Text style={styles.declareValue}>Rs.{Services.DeclaredValue}</Text>
+            </View>
           </View>
 
           <View style={styles.tableContainer}>
@@ -98,7 +101,8 @@ const MyDocument = ({ barcodeBase64, domesticData, AWBNo, destinationArea, desti
 
           <View style={styles.footer}>
             <Text style={styles.fo_text}>If undelivered, please return to:</Text>
-            <Text style={styles.fo_text}>{Shipper.CustomerAddress1 || 'N/A'},{Shipper.CustomerAddress2 || 'N/A'} , {Shipper.CustomerAddress3 || 'N/A'} - {Shipper.CustomerPincode || 'N/A'} , Phone - {Shipper.CustomerMobile || 'N/A'}</Text>
+            <Text style={styles.fo_text}>{Shipper.CustomerAddress1 || 'N/A'},{Shipper.CustomerAddress2 || 'N/A'} , {Shipper.CustomerAddress3 || 'N/A'} - {Shipper.CustomerPincode || 'N/A'}</Text>
+            <Text style={styles.fo_text}>Phone - {Shipper.CustomerMobile || 'N/A'}</Text>
             <Text style={styles.disclaimer}>
               Disclaimer: Blue Dart is not responsible for any kind of cost difference or poor quality.
             </Text>
@@ -150,12 +154,19 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     textAlign: 'right',
   },
-  prepaidRight: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    textAlign: 'right',
+  prepaidContainer: {
+    flexDirection: 'column', // Stack elements vertically
+    alignItems: 'flex-end',  // Align text to the right
     marginRight: 10,
-    marginBottom: 10,
+  },
+  prepaidRight: {
+    fontSize: 18, // Bigger font for Prepaid
+    fontWeight: 'bold',
+  },
+  declareValue: {
+    fontSize: 14, // Smaller font for DeclaredValue
+    fontWeight: 'bold',
+    marginBottom: 20,
   },
   orderInfo: {
     fontSize: 7,
@@ -251,6 +262,7 @@ const styles = StyleSheet.create({
     fontSize: 10,
     textAlign: 'center',
     paddingTop: 8,
+    lineHeight: 2
   },
   fo_text: {
     marginBottom: 8,

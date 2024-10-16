@@ -133,7 +133,7 @@ export default function GenerateWaybill({ order, onClose }) {
                     "ConsigneeAddress1": order.shipping_address.address1 || "N/A",
                     "ConsigneeAddress2": order.shipping_address.address2 || "N/A",
                     "ConsigneeAddress3": order.shipping_address.city || "N/A",
-                    "ConsigneeAttention": order.shipping_address.company || "N/A",
+                    "ConsigneeAttention": `${order.shipping_address.first_name} ${order.shipping_address.last_name}` || "N/A",
                     "ConsigneeEmailID": order.customer.email || "N/A",
                     "ConsigneeMobile": order.shipping_address.phone || "+919999999999",
                     "ConsigneeName": `${order.shipping_address.first_name} ${order.shipping_address.last_name}` || "N/A",
@@ -169,7 +169,7 @@ export default function GenerateWaybill({ order, onClose }) {
                     "Dimensions": [
                         {
                             "Breadth": 10,
-                            "Count": order.line_items.length.toString(),
+                            "Count": 1,
                             "Height": 10,
                             "Length": 10
                         }
@@ -195,7 +195,7 @@ export default function GenerateWaybill({ order, onClose }) {
                     "PickupMode": "",
                     "PickupTime": "0800",
                     "PickupType": "",
-                    "PieceCount": order.line_items.length.toString(),
+                    "PieceCount": 1,
                     "PreferredPickupTimeSlot": "",
                     "ProductCode": "D",
                     "ProductFeature": "",
